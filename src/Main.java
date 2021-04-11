@@ -9,7 +9,12 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("connected");
         run();
+//        if (args.length == 0) {
+//            System.out.println("0 inputs, bye!");
+//            return;
+//        }
 //        if (args[0].equals("–e") && args.length == 1) {
 //            System.out.println("to encrypt a massage, use the following syntax:" +
 //                    "\n     Java –jar aes.jar -e -k < path-to-key-file > -i <path-to-input-file> -o <path-to-output-file>");
@@ -56,98 +61,45 @@ public class Main {
 //                byte[] plainText = utils.readFileFromPath(pathPlain);
 //                byte[] cipher = utils.readFileFromPath(pathCypher);
 //
-//                AesBreak aesBreak = new AesBreak();
-//                List<byte[]> keys = aesBreak.breakAlgorithm(plainText, cipher);
+//                AesBreak aesBreak = new AesBreak(plainText, cipher);
+//                List<byte[]> keys = aesBreak.breakAlgorithm();
 //                utils.writeToFileFromPath(pathOutput, keys);
 //            }
 //        }
     }
 
     public static void run() {
-        byte[] content = new byte[16];
-        try {
-            content = Files.readAllBytes(Paths.get("src/self_testing_files_2021/message_short"));
-            System.out.println("content: " + new String(content));
-            System.out.println("length: " + content.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        byte[] content_massage = utils.readFileFromPath("src/self_testing_files_2021/message_short");
+        byte[] key = new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+        AesEncryption aesEncryption = new AesEncryption(key);
 
-        System.out.println("**************************************************************");
-        System.out.println("starting to test AES implementations...");
-
-        AesEncryption aesEncryption = new AesEncryption(
-//                  new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-                new byte[]{16, 85, 51, 16, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1}); //32 0
-        System.out.println("created AesEncryption object V");
-
-//        swap test - its working :)
-
-
-//        byte[] b = new byte[16];
-//        for (int i = 0; i < 16; i++) {
-//            b[i]= (byte) (i+1);
-//        }
-//
-//        for (int i = 0; i < 16; i++) {
-//            System.out.print(b[i]+",");
-//        }
-//
-//        System.out.println();
-//
-//        byte[] x =aesEncryption.swapIndexes(b);
-//        for (int i = 0; i < 16; i++) {
-//            System.out.print(x[i]+",");
-//        }
-//
-//        System.out.println();
-//
-//        byte[] con =aesEncryption.swapIndexes(content);
-//        System.out.println(new String(con));
-//
-//        con =aesEncryption.swapIndexes(con);
-//        System.out.println(new String(con));
-
-        System.out.println("starting to encrypt massage - content...");
-        List<byte[]> cipher_blocks = aesEncryption.encryptMassage(content);
+        List<byte[]> cipher_blocks = aesEncryption.encryptMassage(content_massage);
 
         System.out.println("\ncyphered content:");
         for (byte[] cipher_block : cipher_blocks) {
             System.out.println("index: " + cipher_blocks.indexOf(cipher_block) + ", content: " + new String(cipher_block));
-
         }
-        System.out.println("*******\n\n");
+        utils.writeToFileFromPath("src/self_testing_files_2021/message_short_enc", cipher_blocks);
+
+        System.out.println("*******");
 
 
-        AesDecryption aesDecryption = new AesDecryption(
-//                new byte[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});
-                new byte[]{16, 85, 51, 16, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1}); //32 0
-        System.out.println("created AesDecryption object V");
+        AesDecryption aesDecryption = new AesDecryption(key); //32 0
+        byte[] content_cipher = utils.readFileFromPath("src/self_testing_files_2021/message_short_enc");
 
-        System.out.println("starting to decrypt ciphered blocks - content...");
-        List<byte[]> plaintext_blocks = aesDecryption.decryptMassage(cipher_blocks);
+        List<byte[]> plaintext_blocks = aesDecryption.decryptMassage(content_cipher);
 
-        System.out.println("\nplaintext blocks content:");
+        System.out.println("plaintext blocks content:");
         for (byte[] plaintext : plaintext_blocks) {
             System.out.println("index: " + plaintext_blocks.indexOf(plaintext) + " ,content: " + new String(plaintext));
         }
 
         System.out.println("\nbreaking aes algorithm:");
-        byte[] cipher = new byte[16 * cipher_blocks.size()];
-        int factor = 0;
-        for (byte[] block : cipher_blocks) {
-            for (int i = 0; i < 16; i++) {
-                cipher[i + 16 * factor] = block[i];
-            }
-            factor++;
-        }
-        System.out.println("cipher is:" + Arrays.toString(cipher));
 
-        AesBreak aesBreak = new AesBreak(content, cipher);
+        AesBreak aesBreak = new AesBreak(content_massage, content_cipher);
         List<byte[]> keys = aesBreak.breakAlgorithm();
-        for (byte[] key :
-                keys) {
-            System.out.println("key: " + keys.indexOf(key) + ": " + Arrays.toString(key));
+        for (byte[] keyi : keys) {
+            System.out.println("key: " + (int) (keys.indexOf(keyi) + 1) + ": " + Arrays.toString(keyi));
         }
         System.out.println();
         System.out.println("hi :)");
