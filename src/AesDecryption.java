@@ -14,7 +14,6 @@ public class AesDecryption {
 
     public List<byte[]> decryptMassage(List<byte[]> cipher_blocks) {
         //blocks
-
         List<byte[]> plaintext = new ArrayList<>();
         for (byte[] block : cipher_blocks) {
             plaintext.add(decrypt(block));
