@@ -15,20 +15,20 @@ public class AesBreak {
 
         byte[] mXorC = getXor(this.message, this.cipher);
 
-        //K2 will be initialized to {0,0,...,0} () - default
-        byte[] K2 = new byte[16];
+        //K1T will be initialized to {0,0,...,0} () - which means K1 also is {0,0,...,0}
+        byte[] K1T = new byte[16];
 
-        List<byte[]> mXorCXorK2 = new ArrayList<>();
+        List<byte[]> mXorCXorK1T = new ArrayList<>();
 
         for (int i = 0; i <= mXorC.length - 16; i += 16) {
-            mXorCXorK2.add(getXor(Arrays.copyOfRange(mXorC, i, i + 16), K2));
+            mXorCXorK1T.add(getXor(Arrays.copyOfRange(mXorC, i, i + 16), K1T));
         }
 
         //Xor is linear function. Hence, 1 pair of k1,k2 satisfies our need. therefore we will find the key-pair of the first block.
-        byte[] K1 = swapIndexes(mXorCXorK2.get(0));
+        byte[] K2 = mXorCXorK1T.get(0);
 
         List<byte[]> keys = new ArrayList<>();
-        keys.add(K1);
+        keys.add(K1T);
         keys.add(K2);
 
         return keys;

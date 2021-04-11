@@ -137,7 +137,7 @@ public class Main {
         int factor = 0;
         for (byte[] block : cipher_blocks) {
             for (int i = 0; i < 16; i++) {
-                cipher[factor * i] = block[i];
+                cipher[i + 16 * factor] = block[i];
             }
             factor++;
         }
