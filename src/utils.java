@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,9 +16,13 @@ public class utils {
         return content;
     }
 
-    public static void writeToFileFromPath(String path, List<byte[]> data) { //***********change
+    public static void writeToFileFromPath(String path, List<byte[]> data) {
         try {
-           byte[] content = Files.readAllBytes(Paths.get(path));
+            FileWriter myWriter = new FileWriter(path);
+            for (byte[] block:data ) {
+                myWriter.write(new String(block));
+            }
+            myWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

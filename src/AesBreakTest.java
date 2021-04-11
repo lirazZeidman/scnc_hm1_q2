@@ -26,10 +26,12 @@ class AesBreakTest {
     @BeforeAll
     public void setUp(){
         this.message = GenerateRandomBytes(16);
-        this.Keys = GenerateRandomBytes(32);
+//        this.Keys = GenerateRandomBytes(32);
 //        for (int i = 0; i < 16; i++) {
 //            Keys[i] = 0;
 //        }
+        this.Keys = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
 
         this.K1 = Arrays.copyOfRange(Keys, 0, 16);
         this.K2 = Arrays.copyOfRange(Keys, 16, 32);
