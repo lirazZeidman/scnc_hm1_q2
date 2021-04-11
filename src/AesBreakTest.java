@@ -2,14 +2,11 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.BeforeEach;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AesBreakTest {
@@ -27,7 +24,7 @@ class AesBreakTest {
     }
 
     @BeforeAll
-    public void setUp() throws Exception {
+    public void setUp(){
         this.message = GenerateRandomBytes(16);
         this.Keys = GenerateRandomBytes(32);
 //        for (int i = 0; i < 16; i++) {
